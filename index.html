@@ -26,6 +26,13 @@
   .muted { color:#666; font-size:.9em;}
   .badge { display:inline-block; background:#eef2ff; color:#002b49; padding:2px 8px; border-radius:999px; font-size:.8em; margin-left:6px;}
   svg { width:100%; height:100%; cursor:pointer; }
+  /* Collapsible Controls */
+  .controls-toggle { background: linear-gradient(135deg, #002b49, #004d75); color: #fff; padding: 12px 20px; cursor: pointer; border: none; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 600; }
+  .controls-toggle:hover { background: linear-gradient(135deg, #003d5c, #005a8a); }
+  .controls-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: #002b49; }
+  .controls-content.open { max-height: 300px; }
+  .chevron { width: 20px; height: 20px; transition: transform 0.3s; }
+  .chevron.rotate { transform: rotate(180deg); }
   .state { stroke:#fff; stroke-width:1px; transition:.2s; }
   .state:hover { stroke-width:2px; }
   .city-circle { fill:#ff6b35; stroke:#fff; stroke-width:2px; cursor:pointer; transition:.2s; }
@@ -52,22 +59,36 @@
     <button class="back-button" onclick="resetToUSView()">← Back to US Map</button>
     <div class="state-title" id="stateTitle"></div>
     <svg id="map"></svg>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-color" style="background:#002b49;"></div><span>Most firms</span></div>
-      <div class="legend-item"><div class="legend-color" style="background:#CBE1F8;"></div><span>Fewest firms</span></div>
-      <div class="legend-item"><div class="legend-color" style="background:#ff6b35;"></div><span>Cities with Spotlight Ranked Firms</span></div>
-    </div>
-  </div>
-  <div class="sidebar">
-    <div class="header"><h1>Spotlight Ranked Firms</h1></div>
-    <div class="controls">
-      <div class="control-group">
-        <label for="practiceArea">Filter by Practice Area</label>
-        <select id="practiceArea">
-          <option value="__all__">All Practice Areas</option>
-          <option value="Antitrust">Antitrust</option><option value="Artifical Intelligence">Artifical Intelligence</option><option value="Bankruptcy & Restructuring">Bankruptcy & Restructuring</option><option value="Construction">Construction</option><option value="Corporate Compliance">Corporate Compliance</option><option value="Corporate/Commercial">Corporate/Commercial</option><option value="Energy & Natural Resources">Energy & Natural Resources</option><option value="Energy & Projects">Energy & Projects</option><option value="Environment">Environment</option><option value="FinTech">FinTech</option><option value="Franchising">Franchising</option><option value="Government Relations">Government Relations</option><option value="Healthcare">Healthcare</option><option value="Immigration">Immigration</option><option value="Insurance">Insurance</option><option value="Intellectual Property">Intellectual Property</option><option value="International Arbitration">International Arbitration</option><option value="International Trade">International Trade</option><option value="Labor & Employment">Labor & Employment</option><option value="Litigation: General Commercial">Litigation: General Commercial</option><option value="Litigation: White-Collar Crime & Government Investigations">Litigation: White-Collar Crime & Government Investigations</option><option value="Media & Entertainment">Media & Entertainment</option><option value="Medical Malpractice">Medical Malpractice</option><option value="Mergers & Acqusitions">Mergers & Acqusitions</option><option value="Personal Injury">Personal Injury</option><option value="Privacy & Data Security">Privacy & Data Security</option><option value="Products Liability">Products Liability</option><option value="Professional Liability">Professional Liability</option><option value="Real Estate">Real Estate</option><option value="Securities">Securities</option><option value="Securities Litigation">Securities Litigation</option><option value="Shipping & Maritime">Shipping & Maritime</option><option value="Sports Law">Sports Law</option><option value="Startups & Emerging Companies">Startups & Emerging Companies</option><option value="Tax">Tax</option><option value="Technology & Outsourcing">Technology & Outsourcing</option><option value="Transportation">Transportation</option><option value="Trust & Estates">Trust & Estates</option>
-        </select>
+     <div class="legend" style="display: none;">
+   <div class="controls-wrapper">
+      <button class="controls-toggle" onclick="toggleControls()">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span>🔍</span>
+          <span>Filters & Search</span>
+        </div>
+        <svg class="chevron" id="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      
+      <div class="controls-content" id="controlsContent">
+        <div class="controls">
+          <div class="control-group">
+            <label for="practiceArea">Filter by Practice Area</label>
+            <select id="practiceArea">
+              <option value="__all__">All Practice Areas</option>
+              <option value="Antitrust">Antitrust</option><option value="Artifical Intelligence">Artifical Intelligence</option><option value="Bankruptcy & Restructuring">Bankruptcy & Restructuring</option><option value="Construction">Construction</option><option value="Corporate Compliance">Corporate Compliance</option><option value="Corporate/Commercial">Corporate/Commercial</option><option value="Energy & Natural Resources">Energy & Natural Resources</option><option value="Energy & Projects">Energy & Projects</option><option value="Environment">Environment</option><option value="FinTech">FinTech</option><option value="Franchising">Franchising</option><option value="Government Relations">Government Relations</option><option value="Healthcare">Healthcare</option><option value="Immigration">Immigration</option><option value="Insurance">Insurance</option><option value="Intellectual Property">Intellectual Property</option><option value="International Arbitration">International Arbitration</option><option value="International Trade">International Trade</option><option value="Labor & Employment">Labor & Employment</option><option value="Litigation: General Commercial">Litigation: General Commercial</option><option value="Litigation: White-Collar Crime & Government Investigations">Litigation: White-Collar Crime & Government Investigations</option><option value="Media & Entertainment">Media & Entertainment</option><option value="Medical Malpractice">Medical Malpractice</option><option value="Mergers & Acqusitions">Mergers & Acqusitions</option><option value="Personal Injury">Personal Injury</option><option value="Privacy & Data Security">Privacy & Data Security</option><option value="Products Liability">Products Liability</option><option value="Professional Liability">Professional Liability</option><option value="Real Estate">Real Estate</option><option value="Securities">Securities</option><option value="Securities Litigation">Securities Litigation</option><option value="Shipping & Maritime">Shipping & Maritime</option><option value="Sports Law">Sports Law</option><option value="Startups & Emerging Companies">Startups & Emerging Companies</option><option value="Tax">Tax</option><option value="Technology & Outsourcing">Technology & Outsourcing</option><option value="Transportation">Transportation</option><option value="Trust & Estates">Trust & Estates</option>
+            </select>
+          </div>
+          <div class="control-group ac-wrap">
+            <label for="searchBox">Search firms</label>
+            <input id="searchBox" type="text" placeholder="Start typing a firm name…" autocomplete="off">
+            <div id="autocomplete" class="autocomplete"></div>
+          </div>
+          <button id="resetBtn">Reset View</button>
+        </div>
       </div>
+    </div>
       <div class="control-group ac-wrap">
         <label for="searchBox">Search firms</label>
         <input id="searchBox" type="text" placeholder="Start typing a firm name…" autocomplete="off">
@@ -396,6 +417,11 @@ function getStateName(stateId) {
   };
   return stateNames[String(stateId).padStart(2,'0')];
 }
+  function toggleControls() {
+  const content = document.getElementById('controlsContent');
+  const chevron = document.getElementById('chevron');
+  content.classList.toggle('open');
+  chevron.classList.toggle('rotate');
 
 // Zoom behaviour: shrink dots and labels as you zoom in; resize label boxes
 const zoomBehavior = d3.zoom()
